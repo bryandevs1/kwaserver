@@ -1,35 +1,17 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema;
-const CustomerSchema = new Schema({
-  firstName: {
-    type: String,
-    required: true
-  },
-  lastName: {
-    type: String,
-    required: true
-  },
-  tel: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true
-  },
-  details: {
-    type: String,
-    required: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now()
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now()
-  }
+const customerSchema = new mongoose.Schema({
+  firstName: String,
+  lastName: String,
+  tel: String,
+  email: String,
+  details: String,
+  profileImage: String, // Ensure this field matches your schema
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('Customer', CustomerSchema);
+const Customer = mongoose.model("Customer", customerSchema);
+console.log("Customer model loaded"); // Add this line in the model file
+
+module.exports = Customer;

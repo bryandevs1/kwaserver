@@ -1,5 +1,57 @@
 const Customer = require("../models/Customer");
 const mongoose = require("mongoose");
+const multer = require("multer");
+const path = require("path");
+
+// Set up multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+    cb(null, true);
+  } else {
+    cb(new Error("Only JPEG and PNG files are allowed"), false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1024 * 1024 * 10 }, // 10MB file limit
+  fileFilter: fileFilter,
+});
+
+// POST route to handle new customer with image upload
+exports.postCustomer = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).send("Image is required");
+    }
+
+    // Proceed with saving the customer
+    const newCustomer = new Customer({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      details: req.body.details,
+      tel: req.body.tel,
+      email: req.body.email,
+      profileImage: req.file ? `/uploads/${req.file.filename}` : null,
+    });
+
+    await newCustomer.save();
+    await req.flash("info", "New customer has been added.");
+    res.redirect("/");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error saving customer data");
+  }
+};
 
 /**
  * GET /
@@ -88,26 +140,6 @@ exports.addCustomer = async (req, res) => {
  * POST /
  * Create New Customer
  */
-exports.postCustomer = async (req, res) => {
-  console.log(req.body);
-
-  const newCustomer = new Customer({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    details: req.body.details,
-    tel: req.body.tel,
-    email: req.body.email,
-  });
-
-  try {
-    await Customer.create(newCustomer);
-    await req.flash("info", "New customer has been added.");
-
-    res.redirect("/");
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 /**
  * GET /
