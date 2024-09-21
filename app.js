@@ -10,7 +10,6 @@ const multer = require("multer");
 const path = require("path");
 
 const app = express();
-const port = process.env.PORT || 5000;
 
 // Connect to Database
 connectDB();
@@ -63,16 +62,5 @@ app.get("*", (req, res) => {
   res.status(404).render("404");
 });
 
-app.get("/edit/:id", (req, res) => {
-  Customer.findById(req.params.id, (err, customer) => {
-    if (err) {
-      console.error("Error fetching customer:", err);
-      return res.status(500).send(err);
-    }
-    res.render("edit", { customer }); // Ensure profileImage is part of the customer object
-  });
-});
-
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
-});
+// Export app for Vercel
+module.exports = app;
