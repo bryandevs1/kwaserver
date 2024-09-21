@@ -58,9 +58,6 @@ exports.postCustomer = async (req, res) => {
  * Homepage
  */
 exports.homepage = async (req, res) => {
-  // Remove
-  // const messages = await req.consumeFlash('info');
-  // Use this instead
   const messages = await req.flash("info");
 
   const locals = {
@@ -72,12 +69,12 @@ exports.homepage = async (req, res) => {
   let page = req.query.page || 1;
 
   try {
+    // Remove the .toArray() call and use Mongoose aggregation directly
     const customers = await Customer.aggregate([{ $sort: { createdAt: -1 } }])
       .skip(perPage * page - perPage)
-      .limit(perPage)
-      .exec();
-    // Count is deprecated. Use countDocuments({}) or estimatedDocumentCount()
-    // const count = await Customer.count();
+      .limit(perPage);
+
+    // Count the total documents
     const count = await Customer.countDocuments({});
 
     res.render("index", {
@@ -89,8 +86,10 @@ exports.homepage = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(500).send("Error fetching customers");
   }
 };
+
 // exports.homepage = async (req, res) => {
 //     const messages = await req.consumeFlash('info');
 //     const locals = {
