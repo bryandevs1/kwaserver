@@ -17,6 +17,12 @@ app.use((req, res, next) => {
   next();
 });
 
+// Explicitly set the views directory
+app.set("views", path.join(__dirname, "views"));
+
+// Set the view engine to ejs
+app.set("view engine", "ejs");
+
 connectDB()
   .then(() => console.log("Database connected successfully"))
   .catch((err) => console.error("Database connection failed", err));
