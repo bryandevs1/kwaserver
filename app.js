@@ -12,7 +12,14 @@ const path = require("path");
 const app = express();
 
 // Connect to Database
-connectDB();
+app.use((req, res, next) => {
+  console.log(`Request received at ${new Date()}`);
+  next();
+});
+
+connectDB()
+  .then(() => console.log("Database connected successfully"))
+  .catch((err) => console.error("Database connection failed", err));
 
 // Configure multer for file storage
 const storage = multer.diskStorage({
