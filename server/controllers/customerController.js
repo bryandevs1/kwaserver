@@ -69,12 +69,12 @@ exports.homepage = async (req, res) => {
   let page = req.query.page || 1;
 
   try {
-    // Remove the .toArray() call and use Mongoose aggregation directly
+    // Mongoose returns an array directly, so no need to use .toArray()
     const customers = await Customer.aggregate([{ $sort: { createdAt: -1 } }])
-      .skip(perPage * page - perPage)
+      .skip(perPage * (page - 1)) // Adjust pagination
       .limit(perPage);
 
-    // Count the total documents
+    // Count the total number of documents in the Customer collection
     const count = await Customer.countDocuments({});
 
     res.render("index", {
