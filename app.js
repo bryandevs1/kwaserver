@@ -46,7 +46,7 @@ app.use(methodOverride("_method"));
 app.use(express.static("public"));
 app.use(
   cors({
-    origin: "https://kwaclient.vercel.app", // Add your frontend domain
+    origin: "http://localhost:3000", // Add your frontend domain
     methods: ["GET", "POST", "PUT", "DELETE"], // Allow necessary HTTP methods
     credentials: true, // If you are dealing with credentials (cookies, etc.)
   })
