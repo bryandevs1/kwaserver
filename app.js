@@ -44,25 +44,10 @@ app.use(methodOverride("_method"));
 
 // Static Files
 app.use(express.static("public"));
+
 app.use(
   cors({
-    origin: function (origin, callback) {
-      const allowedOrigins = [
-        "http://members.kwa.church",
-        "https://members.kwa.church",
-        "http://localhost:3000",
-        // Add more domains as needed
-      ];
-
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) === -1) {
-        const msg =
-          "The CORS policy for this site does not allow access from the specified Origin.";
-        return callback(new Error(msg), false);
-      }
-      return callback(null, true);
-    },
+    origin: "*", // Allow all origins
     methods: ["GET", "POST", "PUT", "DELETE"], // Allow necessary HTTP methods
     credentials: true, // If you are dealing with credentials (cookies, etc.)
   })
