@@ -50,6 +50,7 @@ app.use(
       const allowedOrigins = [
         "http://members.kwa.church",
         "https://members.kwa.church",
+        "http://localhost:3000",
         // Add more domains as needed
       ];
 
